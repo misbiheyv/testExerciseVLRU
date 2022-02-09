@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="category">
-            <div class="card-label-title">
+            <div class="card-label-title sort__label-title">
                 Приоритет
             </div>
             <ul class="category__labels">
@@ -15,4 +15,12 @@
 </template>
 
 <style scoped>
+ul li {
+    line-height: 170%;
+    font-size: 1.3rem;
+    margin-left: 1vw;
+}
+.sort__label-title {
+    margin-bottom: 1vh;
+}
 </style>

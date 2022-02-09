@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="menu__wrapper">
         <div class="category">
-            <div class="card-label-title">
+            <div class="card-label-title menu__label-title">
                 Приоритет
             </div>
             <ul class="category__labels">
@@ -14,7 +14,7 @@
         </div>
 
         <div class="category">
-            <div class="card-label-title">
+            <div class="card-label-title menu__label-title">
                 Отметка
             </div>
             <ul class="category__labels">
@@ -39,8 +39,16 @@
 </script>
 
 <style scoped>
+.menu__label-title {
+    margin-bottom: 1vh;
+}
 .category:last-child {
-    margin: 20px 0 0 0
+    margin: 2vh 0 0 0
 }
 
+ul li {
+    line-height: 180%;
+    font-size: 1.3rem;
+    margin-left: 1vw;
+}
 </style>

@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
-        <aside>
+        <aside class="aside">
             <div class="card-container sort-categories">
                 <sort-categories></sort-categories>
             </div>
             
-            <div class="card-container">
+            <div class="card-container sort-categories">
                 <menu-categories></menu-categories>
             </div>
         </aside>
@@ -37,11 +37,11 @@ export default {
         justify-content: space-around;
         align-items: flex-start;
         flex-grow: 1;
-        padding: 10px 20px;
+        padding: 2vh 2vw;
     }
     .aside-menu {
         background-color: white;
-        padding: 10px 15px;
+        padding: 1vh 2vw;
         display: flex;
         flex-direction: column;
         align-content: center;
@@ -56,14 +56,16 @@ export default {
         color: white;
     }
     .card {
-        margin: 10px 0
+        margin: 15px 0
     }
     .content {
-        padding: 0 0 10px 20px;
+        padding: 0 0 1vh 2vw;
         width: 80%
     }
-    .sort-categories {
+    .sort-categories:first-child {
         margin-bottom: 2vh;
     }
-
+    .aside {
+        min-width: 20%
+    }
 </style>

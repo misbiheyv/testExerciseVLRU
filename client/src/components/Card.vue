@@ -14,13 +14,13 @@
 
 <style scoped>
   .card__title {
-    font-size: 26px;
+    font-size: 1.8rem;
     line-height: 130%;
+    margin-bottom: 2vh;
   }
 
-  .info-block {
-    line-height: 130%;
-  }
-
-  
+  .info-block {  
+    font-size: 1.2rem;
+    line-height: 160%;
+  }  
 </style>

@@ -31,7 +31,7 @@
   }
   .card-container {
     background-color: white;
-    padding: 10px 15px;
+    padding: 15px 25px;
     display: flex;
     flex-direction: column;
     border-radius: 3px;
@@ -40,8 +40,8 @@
     box-shadow: 0px 0px 10px -6px rgba(34, 60, 80, 0.5);
   }
   .card-label-title {
-    font-size: 22px;
-    line-height: 130%;
+    font-size: 1.5rem;
+    line-height: 150%;
     color: rgba(0, 0, 0, 0.75);
   }
 </style>
