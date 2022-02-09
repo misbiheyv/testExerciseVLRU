@@ -6,23 +6,27 @@
         <div class="edit__content">
             <div class="card-container">
                 <div class="card-label-title">название задачи</div>
-                <input type="text" value="Задача номер 4" class="info-block title__input">
+                <input type="text" class="info-block title__input" v-model="card.title"/>
+
                 <div class="card-label-title">приоритет</div>
-                <select class="select-priority" name="select">
-                    <option value="value1">Высокий</option>
-                    <option value="value2" selected>Нормальный</option>
-                    <option value="value3">Низкий</option>
+                <select class="select-priority" name="select" v-model="card.priority">
+                    <option value="priority_3">Высокий</option>
+                    <option value="priority_2" selected>Нормальный</option>
+                    <option value="priority_1">Низкий</option>
                 </select>
+
                 <div class="card-label-title">теги</div>
                 <ul class="scrollable-list">
                     <li>Разработка</li>
                     <li>Дизайн</li>
                     <li>Аналитика</li>
                 </ul>
+
                 <div class="card-label-title">описание</div>
-                <textarea class="description_input">Описание задачи 4</textarea>
+                <textarea class="description_input" v-model="card.description">Описание задачи 4</textarea>
+
                 <footer class="card__footer">
-                    <my-button class="action-btn">Сохранить</my-button>
+                    <my-button class="action-btn" @click="onClickSave">Сохранить</my-button>
                 </footer>
             </div>
         </div>
@@ -31,9 +35,26 @@
 
 <script>
 import MyButton from '../components/Button.vue'
+import RequestsService from '../services/requests.service'
 
 export default {
-    components: { MyButton }
+    components: { MyButton },
+    data() {
+        return {
+            card: {
+                title: '',
+                description: '',
+                dateOfCreation: '',
+                priority: '',
+                tags: []
+            }
+        }
+    },
+    methods: {
+        async onClickSave() {
+            await RequestsService.getRequest()
+        }
+    }
 }
 </script>
 
