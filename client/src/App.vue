@@ -44,4 +44,16 @@
     line-height: 150%;
     color: rgba(0, 0, 0, 0.75);
   }
+  .action-btn {
+    background-color: #0091da !important;
+    color: white;
+  }
+  .delete-btn {
+    background-color: #ee4e4a !important;
+    color: white;
+  }
+  .info-block {  
+    font-size: 1.2rem;
+    line-height: 160%;
+  }  
 </style>

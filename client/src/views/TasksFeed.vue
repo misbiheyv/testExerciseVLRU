@@ -1,16 +1,15 @@
 <template>
     <div class="wrapper">
-        <aside class="aside">
+        <aside class="feed__aside">
             <div class="card-container sort-categories">
                 <sort-categories></sort-categories>
             </div>
-            
             <div class="card-container sort-categories">
                 <menu-categories></menu-categories>
             </div>
         </aside>
         <div class="content">
-            <my-button class="action-btn"></my-button>
+            <my-button class="action-btn">{{'Добавить задачу'}}</my-button>
             <ul class="feed">
                 <li> <card class="card"></card></li>
                 <li> <card class="card"></card></li>
@@ -51,10 +50,6 @@ export default {
     li {
         cursor: pointer;
     }
-    .action-btn {
-        background-color: #0091da;
-        color: white;
-    }
     .card {
         margin: 15px 0
     }
@@ -65,7 +60,7 @@ export default {
     .sort-categories:first-child {
         margin-bottom: 2vh;
     }
-    .aside {
+    .feed__aside {
         min-width: 20%
     }
 </style>

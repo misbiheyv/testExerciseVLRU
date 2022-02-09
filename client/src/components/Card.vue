@@ -19,8 +19,4 @@
     margin-bottom: 2vh;
   }
 
-  .info-block {  
-    font-size: 1.2rem;
-    line-height: 160%;
-  }  
 </style>
