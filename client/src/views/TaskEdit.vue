@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         async onClickSave() {
-            await RequestsService.getRequest('save_card', this.card)
+            console.log(await RequestsService.getRequest('save_card', this.card))
         }
     }
 }
