@@ -6,9 +6,10 @@ class RequestsService {
         console.log(opts)
         fetch(`${API_URL}/${url}?`+opts)
             .then(res => {
-                if(!res?.success)
-                    return {success: false}
-                return {success: true, data: res.data}
+                console.log(res)
+                // if(!res?.success)
+                //     return {success: false}
+                // return {success: true, data: res.data}
             })
             .catch(err => console.log(err))
     }
