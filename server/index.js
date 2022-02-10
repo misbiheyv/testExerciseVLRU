@@ -3,6 +3,8 @@ import DBQueries from "./DB/DBQueries.js";
 
 const app = express()
 const router = express.Router()
+router.use(express.urlencoded({ extended: true }))
+
 const allowCrossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Methods', '*')
@@ -12,6 +14,7 @@ const allowCrossDomain = function (req, res, next) {
     next()
 }
 app.use(allowCrossDomain)
+app.use(router)
 const PORT = process.env.PORT || 5001
 
 router.get('/save_card', (req, res) => {
@@ -20,7 +23,7 @@ router.get('/save_card', (req, res) => {
     const normalize = (time) => {
         return time.toString().length===2?time:('0'+time)
     }
-    info.priority = /_+(?<weight>\d)$/.exec(info.priority).groups["weight"]
+    info.priority = /_+(?<weight>\d)$/.exec(info.priority)?.groups?.weight ?? '1'
 
     info.creationDate = `${now.getFullYear()}.${normalize(now.getMonth())}.${normalize(now.getDate())} ${normalize(now.getHours())}:${normalize(now.getMinutes())}`
     // DBQueries.addColsInTable('default','task',['title','priority','tags','description','creationDate'],)
@@ -31,8 +34,7 @@ router.get('/save_card', (req, res) => {
         [info.title, info.priority, info.tags, info.description, info.creationDate]
     )
 
-    console.log(info)
-    res.send({success: true})
+    res.send({success: true, info})
 })
 
 try {
