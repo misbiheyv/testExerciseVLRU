@@ -10,12 +10,13 @@ app.get('/save_card', (req, res) => {
     const normalize = (time) => {
         return time.toString().length===2?time:('0'+time)
     }
+    info.priority = /_+(?<weight>\d)$/.exec(info.priority).groups["weight"]
 
     info.creationDate = `${now.getFullYear()}.${normalize(now.getMonth())}.${normalize(now.getDate())} ${normalize(now.getHours())}:${normalize(now.getMinutes())}`
-    
+    // DBQueries.addColsInTable('default','task',['title','priority','tags','description','creationDate'],)
     DBQueries.addElementsInTable(
-        'test', 
-        'tasks', 
+        'default', 
+        'task', 
         ['title','priority','tags','description','creationDate'],
         [info.title, info.priority, info.tags, info.description, info.creationDate]
     )

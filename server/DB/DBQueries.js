@@ -5,8 +5,8 @@ let db;
 class DB {
     
     static init(dbName, tableName) {
-        if (dbName !== 'string' || tableName !== 'string' || dbName.length < 1 || tableName < 1) 
-            throw new Error('incorrect type of names')
+        // if (dbName !== 'string' || tableName !== 'string' || dbName.length < 1 || tableName < 1) 
+        //     throw new Error('incorrect type of names')
 
         this.#createBD(dbName);
         this.#createTable(dbName, tableName);
@@ -19,7 +19,7 @@ class DB {
         }
 
         const DB_NAME = name;
-        let DB_PATH = `../${DB_NAME}.db`
+        let DB_PATH = `./${DB_NAME}.db`
 
         try {
             db = new sqlite.Database(DB_PATH, (err) => {
@@ -41,7 +41,7 @@ class DB {
             return console.error("Incorrect name for Table");
 
         const DB_NAME = dataBaseName;
-        let DB_PATH = `../${DB_NAME}.db`
+        let DB_PATH = `./${DB_NAME}.db`
         const TABLE_NAME = tableName;
 
         // let isTableCreated = (db.run(`SELECT name FROM sqlite_master WHERE type='table' AND name='${TABLE_NAME}';`, err =>{
@@ -73,7 +73,7 @@ class DB {
 
     static removeTable(dataBaseName, tableName){
 
-        let DB_PATH = `../${dataBaseName}.db`
+        let DB_PATH = `./${dataBaseName}.db`
 
         db = new sqlite.Database(DB_PATH, (err) => {
             if (err)
@@ -91,7 +91,7 @@ class DB {
 
     static addColsInTable(dataBaseName, tableName, colsNames){
         // удалить параметр colsNames, добавить метод getColNames
-        let DB_PATH = `../${dataBaseName}.db`
+        let DB_PATH = `./${dataBaseName}.db`
 
         try {
             db = new sqlite.Database(DB_PATH, (err) => {
@@ -111,7 +111,7 @@ class DB {
     static addElementsInTable(dataBaseName, tableName, colNames, elements){
         // Избавиться от параметра colNames
 
-        let DB_PATH = `../${dataBaseName}.db`
+        let DB_PATH = `./${dataBaseName}.db`
         db = new sqlite.Database(DB_PATH)
 
         db.run(`INSERT INTO ${tableName}(${colNames}) VALUES(` + '?,'.repeat(elements.length-1) + '?)', elements, function(err) {
@@ -125,7 +125,7 @@ class DB {
 
 
     static removeElementFromTable(dataBaseName, tableName, removedElement){
-        let DB_PATH = `../${dataBaseName}.db`
+        let DB_PATH = `./${dataBaseName}.db`
         db = new sqlite.Database(DB_PATH)
 
         try {
@@ -140,7 +140,7 @@ class DB {
     }
 
     static clearTable(dataBaseName, tableName){
-        let DB_PATH = `../${dataBaseName}.db`
+        let DB_PATH = `./${dataBaseName}.db`
         db = new sqlite.Database(DB_PATH)
 
         try {
