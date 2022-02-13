@@ -1,7 +1,7 @@
 <template>
     <div class="edit__wrapper">
         <header class="edit__header">
-            <my-button class="">назад</my-button>
+            <my-button class="" @click="onClickBack">назад</my-button>
         </header>
         <div class="edit__content">
             <div class="card-container">
@@ -10,13 +10,13 @@
 
                 <div class="card-label-title">приоритет</div>
                 <select class="select-priority" name="select" v-model="card.priority">
-                    <option value="priority_3">Высокий</option>
-                    <option value="priority_2" selected>Нормальный</option>
-                    <option value="priority_1">Низкий</option>
+                    <option value="hight">Высокий</option>
+                    <option value="normal" selected>Нормальный</option>
+                    <option value="low">Низкий</option>
                 </select>
 
                 <div class="card-label-title">теги</div>
-                <ul class="scrollable-list">
+                <ul class="scrollable-list" @click="onTagClick">
                     <li>Разработка</li>
                     <li>Дизайн</li>
                     <li>Аналитика</li>
@@ -39,6 +39,34 @@ import RequestsService from '../services/requests.service'
 
 export default {
     components: { MyButton },
+    props: [
+        'titleP',
+        'descriptionP',
+        'dateOfCreationP',
+        'priorityP',
+        'tagsP',
+    ],
+
+    async mounted() {
+        if (this.$route.params.id) {
+            const r = await RequestsService.getTaskById(this.$route.params.id)
+
+            this.card.id = r.id
+            this.card.title = r.title
+            this.card.priority = r.priority
+            this.card.tags = r.tags
+            this.card.creationDate = r.creationDate
+            this.card.description = r.description
+        }
+        const el = document.querySelector('.scrollable-list')
+        el.childNodes.forEach((el, index) => el.id = `li-${index}`)
+
+        this.prevPage = this.$store.state.previousPage
+        this.$store.state.previousPage = `edit/${this.card.id}`
+
+        this.loaded = true
+    },
+
     data() {
         return {
             card: {
@@ -47,12 +75,44 @@ export default {
                 dateOfCreation: '',
                 priority: '',
                 tags: []
-            }
+            },
+            prevPage: '',
+            tags: {},
+            loaded: false
         }
     },
+
     methods: {
         async onClickSave() {
-            console.log(await RequestsService.getRequest('save_card', this.card))
+            for (const tag in this.tags) {
+                if (tag % 2 !== 0) 
+                    this.card.tags.push(tag)
+            }
+
+            let res = await RequestsService.getRequest('save_card', this.card)
+            if (!res.success) {
+                return alert('Failure')
+            }
+
+            alert('Created')
+        },
+
+        onTagClick(e) {
+            if(e.target.innerHTML in this.tags) {
+                this.tags[e.target.innerHTML] += 1
+            } else {
+                this.tags[e.target.innerHTML] = 1
+            }
+            
+            if (this.tags[e.target.innerHTML] % 2 !== 0) {
+                e.target.classList.add('selected-tag')
+            } else {
+                e.target.classList.remove('selected-tag')
+            }
+        },
+
+        onClickBack() {
+            this.$router.push(`/${this.prevPage}`)
         }
     }
 }
@@ -107,7 +167,7 @@ export default {
     overflow:hidden; 
     overflow-y:scroll;
     border: solid 1px rgba(0, 0, 0, .3);
-    padding: 5px 10px;
+    /* padding: 5px 10px; */
     font-size: 18px;
     line-height: 170%;
     border-radius: 3px;
@@ -116,10 +176,15 @@ export default {
 .scrollable-list>li {
     /* border-bottom: solid 1px black; */
     cursor: pointer;
+    padding: 5px 10px;
 }
 
 .scrollable-list>li:last-child {
     border: none;
+}
+
+.selected-tag {
+    background-color: rgba(0, 0, 0, .3);
 }
 
 </style>

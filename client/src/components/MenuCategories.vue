@@ -1,6 +1,6 @@
 <template>
     <div class="menu__wrapper">
-        <categories :category="'Приоритет'" :labels="['высокий','средний','низкий']"></categories>
+        <categories :category="'Приоритет'" :labels="['высокий','средний','низкий']" ></categories>
         <categories :category="'Отметка'" :labels="['дизайн','разработка','аналитика']"></categories>
     </div>
 </template>

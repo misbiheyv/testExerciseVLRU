@@ -123,7 +123,6 @@ class DB {
         });
     }
 
-
     static removeElementFromTable(dataBaseName, tableName, removedElement){
         let DB_PATH = `./${dataBaseName}.db`
         db = new sqlite.Database(DB_PATH)
@@ -151,6 +150,66 @@ class DB {
         console.log(`${tableName} has been cleared`)
     }
 
+    static async getRows(dataBaseName, tableName) {
+        let DB_PATH = `./${dataBaseName}.db`
+        db = new sqlite.Database(DB_PATH)
+        const res = []
+        try {
+            const res_1 = await new Promise(resolve => {
+                db.each(`
+                    SELECT * 
+                    FROM ${tableName} 
+                `,
+                    (err, row) => { res.push(row); },
+                    () => { resolve(res); }
+                );
+            });
+            return res_1;
+        } catch (err_1) {
+            return console.log(err_1);
+        }
+    }
+
+    static async getRowById(dataBaseName, tableName, id) {
+        let DB_PATH = `./${dataBaseName}.db`
+        db = new sqlite.Database(DB_PATH)
+        const res = []
+        try {
+            const res_1 = await new Promise(resolve => {
+                db.each(`
+                    SELECT *
+                    FROM ${tableName} 
+                    WHERE id = ${id}
+                `,
+                    (err, row) => { res.push(row); },
+                    () => { resolve(res); }
+                );
+            });
+            return res_1;
+        } catch (err_1) {
+            return console.log(err_1);
+        }
+    }
+
+    static async getRowsCount(dataBaseName, tableName) {
+        let DB_PATH = `./${dataBaseName}.db`
+        db = new sqlite.Database(DB_PATH)
+        const res = []
+        try {
+            const res_1 = await new Promise(resolve => {
+                db.each(`
+                    SELECT COUNT(*) as count
+                    FROM ${tableName} 
+                `,
+                    (err, row) => { res.push(row); },
+                    () => { resolve(res); }
+                );
+            });
+            return res_1;
+        } catch (err_1) {
+            return console.log(err_1);
+        }
+    }
 }
 
 export default DB

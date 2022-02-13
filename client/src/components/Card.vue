@@ -1,13 +1,13 @@
 <template>
   <div class="card-container">
       <div class="card__title">
-        Тестовая задача
+        <slot name="title"></slot>
       </div>
 
       <div class="card__info">
-        <div class="info-block">Создано: 5 минут назад</div>
-        <div class="info-block">Приоритет: высокий</div>
-        <div class="info-block">Отметки: важно</div>
+        <div class="info-block">Создано: <slot name="date"></slot></div>
+        <div class="info-block">Приоритет: <slot name="priority"></slot></div>
+        <div class="info-block">Отметки: <slot name="tags"></slot></div>
       </div>
   </div>
 </template>
