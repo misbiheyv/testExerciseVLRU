@@ -145,7 +145,7 @@ export default {
     font-size: 1.2em;
     border: solid 1px rgba(0, 0, 0, .3);
     resize: vertical;
-    height: 100px;
+    height: 60px;
 }
 
 .card-container>*:nth-child(even) {
@@ -180,6 +180,13 @@ export default {
 
 .selected-tag {
     background-color: rgba(0, 0, 0, .3);
+}
+
+@media (max-width: 992px) {
+
+    .select-priority, .tags-list{
+        width: 100%;
+    }
 }
 
 </style>

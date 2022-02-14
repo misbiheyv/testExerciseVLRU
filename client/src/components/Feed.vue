@@ -81,4 +81,5 @@ li {
 .selected-task>div:first-child {
     background-color: green !important;
 }
+
 </style>

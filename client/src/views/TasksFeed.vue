@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <aside class="feed__aside">
+        <aside class="feed__aside" :class="{'hidden': mobile}">
             <div class="card-container sort-categories">
                 <sort-categories :options="sortOptions" v-model="selectedSort"></sort-categories>
             </div>
@@ -9,9 +9,14 @@
             </div>
         </aside>
         <div class="content">
-            <router-link to="/edit">
-                <my-button class="action-btn">{{'Добавить задачу'}}</my-button>
-            </router-link>
+            <div class="content-buttons">
+                <router-link to="/edit">
+                    <my-button class="action-btn">{{'Добавить задачу'}}</my-button>
+                </router-link>
+                <my-button v-if="mobile" @click="onFiltersClick">
+                    {{ 'Фильтры' }}
+                </my-button>
+            </div>
             <feed :tasks="sortedTasks" :currentSection="currentSection" :maxSectionCount="maxSectionCount" @onCardClick="onCardClick" @loadMorePosts="loadMorePosts"></feed>
         </div>
     </div>
@@ -27,6 +32,10 @@ import Feed from '../components/Feed.vue'
 
 export default {
     components: { SortCategories, MenuCategories, MyButton, Feed },
+    created() {
+        this.mobile = window.innerWidth <= 767
+        window.onresize = () => {this.mobile = window.innerWidth <= 767};
+    },
     async mounted() {
         // получаем нужное количество карточек на 1 скролл
         let res = await RequestsService.getTasks(this.currentSection,this.postsLimit);
@@ -70,7 +79,8 @@ export default {
             postsLimit: 15,
             currentSection: 1,
             maxSectionCount: 1,
-            cards: []
+            cards: [],
+            mobile: false
         }
     },
     methods: {
@@ -83,6 +93,15 @@ export default {
             if(!res.success) return 0;
             this.selectedSort = 'newAhead';
             this.cards = [...this.cards, ...res.tasks];
+        },
+        onFiltersClick() {
+            let el = document.querySelector('.feed__aside').classList
+            console.log(el.contains('hidden'))
+            if(el.contains('hidden')) {
+                el.remove('hidden')
+            } else {
+                el.add('hidden')
+            }
         }
     }
 }
@@ -119,5 +138,23 @@ export default {
     
     .feed__aside {
         min-width: 20%;
+    }
+
+    @media (max-width: 767px) {
+        .wrapper {
+            flex-direction: column;
+        }
+        .content {
+            width: 100%
+        }
+        .feed__aside {
+            width: 100%;
+            flex: 50% 0 0;
+            margin-bottom: 2vh;
+        }
+        .content-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
     }
 </style>

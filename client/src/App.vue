@@ -56,4 +56,7 @@
     font-size: 1.2rem;
     line-height: 160%;
   }  
+  .hidden {
+    display: none;
+  }
 </style>

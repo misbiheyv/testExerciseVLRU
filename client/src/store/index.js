@@ -14,7 +14,7 @@ const store = createStore({
                 'analytics': 'Аналитика',
             }
         },
-        previousPage: ''
+        previousPage: '',
     }
 })
 

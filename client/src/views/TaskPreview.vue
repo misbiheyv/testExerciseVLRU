@@ -2,15 +2,29 @@
     <div class="preview__wrapper">
         <aside class="preview__aside">
             <router-link to="/edit"><my-button class="action-btn">{{'Добавить задачу'}}</my-button></router-link>
-            <sort-categories class="card-container" :options="sortOptions" v-model="selectedSort"></sort-categories>
-            <menu-categories class="card-container"></menu-categories>
+            <my-button class="filters-btn" v-if="mobile" @click="onFiltersClick">{{'Фильтры'}}</my-button>
+
+            <div class="aside__actions" :class="{'hidden': mobile}">
+                <sort-categories class="card-container" :options="sortOptions" v-model="selectedSort"></sort-categories>
+                <menu-categories class="card-container"></menu-categories>
+            </div>
             <feed :tasks="sortedTasks" :currentSection="currentSection" :maxSectionCount="maxSectionCount" @onCardClick="onCardClick" @loadMorePosts="loadMorePosts"></feed>
         </aside>
         <div class="preview__content">
             <div class="buttons__bar">
 
                 <my-button @click="onClickBack">{{ 'Назад' }}</my-button>
-                <router-link :to="`/edit/${this.card.id}`"><my-button class="action-btn">{{ 'Редактировать' }}</my-button></router-link> 
+                <router-link :to="`/edit/${this.card.id}`">
+                    <my-button v-if="mobile" class="action-btn"> 
+                        <template v-slot>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 17 18" fill="none">
+                                <path d="M11.6066 0.5C11.7392 0.5 11.8664 0.552678 11.9602 0.646447L14.7886 3.47487C14.9838 3.67014 14.9838 3.98672 14.7886 4.18198L5.59619 13.3744C5.53337 13.4372 5.45495 13.4821 5.369 13.5046L1.54057 14.5046C1.36883 14.5494 1.18617 14.4999 1.06066 14.3744C0.93514 14.2489 0.885581 14.0662 0.930441 13.8945L1.93044 10.066C1.95289 9.98007 1.99784 9.90165 2.06066 9.83883L11.253 0.646447C11.3468 0.552678 11.474 0.5 11.6066 0.5Z" fill="#FFF"/>
+                                <path d="M1 16.25C0.585786 16.25 0.25 16.5858 0.25 17C0.25 17.4142 0.585786 17.75 1 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H1Z" fill="#FFF"/>
+                            </svg>
+                        </template> 
+                    </my-button>
+                    <my-button v-else class="action-btn">{{ 'Редактировать' }}</my-button>
+                </router-link> 
                 <my-button @click="onClickDelete" class="delete-btn">{{ 'Удалить' }}</my-button>
 
             </div>
@@ -45,6 +59,10 @@ import Feed from '../components/Feed.vue'
 
 export default {
     components: { SortCategories, MenuCategories, MyButton, Feed },
+    created() {
+        this.mobile = window.innerWidth <= 767
+        window.onresize = () => {this.mobile = window.innerWidth <= 767};
+    },
     async mounted() {
         this.prevPage = this.$store.state.previousPage
 
@@ -108,10 +126,10 @@ export default {
             currentSection: 1,
             maxSectionCount: 1,
             cards: [],
-            loaded: false
+            loaded: false,
+            mobile: false
         }
     },
-
     methods: {
         normalizeTags(tags) {
             if(tags.length === 0)
@@ -137,7 +155,6 @@ export default {
             // }
         },
         onCardClick(e) {
-            this.$router.push(`/feed`)
             this.$router.push(`/preview/${e.currentTarget.id}`)
             window.scrollTo(scrollX, 0);
         },
@@ -147,6 +164,15 @@ export default {
             if(!res.success) return 0;
             this.selectedSort = 'newAhead';
             this.cards = [...this.cards, ...res.tasks];
+        },
+        onFiltersClick() {
+            let el = document.querySelector('.aside__actions').classList
+            console.log(el.contains('hidden'))
+            if(el.contains('hidden')) {
+                el.remove('hidden')
+            } else {
+                el.add('hidden')
+            }
         }
     }
 }
@@ -196,4 +222,32 @@ export default {
 .info-block {
     overflow-wrap: break-word;
 }
+.filters-btn {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .preview__wrapper {
+        flex-direction: column-reverse;
+    }
+    .preview__content {
+        width: 100%;
+        margin-bottom: 2vh;
+    }
+    .preview__aside {
+        width: 100%;
+    }
+    .action-btn {
+        display: block;
+        text-align: center;
+    }
+}
+
+@media (max-width: 767px) { 
+    .filters-btn {
+        display: block;
+        text-align: center;
+    }
+}
+
 </style>
