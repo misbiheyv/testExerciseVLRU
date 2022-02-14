@@ -4,7 +4,7 @@
             <router-link to="/edit"><my-button class="action-btn">{{'Добавить задачу'}}</my-button></router-link>
             <sort-categories class="card-container" :options="sortOptions" v-model="selectedSort"></sort-categories>
             <menu-categories class="card-container"></menu-categories>
-            <feed></feed>
+            <feed :tasks="sortedTasks" :currentSection="currentSection" :maxSectionCount="maxSectionCount" @onCardClick="onCardClick" @loadMorePosts="loadMorePosts"></feed>
         </aside>
         <div class="preview__content">
             <div class="buttons__bar">
@@ -26,7 +26,7 @@
                     <div class="info-block">{{ this.priorityCfg[card.priority] }}</div>
 
                     <div class="card-label-title">теги</div>
-                    <div class="info-block">{{ card.tags }}</div>
+                    <div class="info-block">{{ normalizeTags(card.tags) }}</div>
 
                     <div class="card-label-title">описание</div>
                     <div class="info-block">{{ card.description }}</div>
@@ -61,7 +61,17 @@ export default {
         this.$store.state.previousPage = `preview/${this.card.id}`
         this.loaded = true
 
-        
+        let res = await RequestsService.getTasks(this.currentSection,this.postsLimit);
+        let countRes = await RequestsService.getRequest('getTasksCount');
+
+        if(!countRes.success) {
+            this.maxSectionCount = 1;
+        } else {
+            this.maxSectionCount = Math.ceil(countRes.count/this.postsLimit);
+        }
+
+        if(!res.success) return 0;
+        this.cards = res.tasks;
     },
     computed: {
         sortedTasks(cur) {
@@ -94,11 +104,24 @@ export default {
                 {value: 'oldAhead', name: 'Сначала старые'}
             ],
             selectedSort: '',
+            postsLimit: 15,
+            currentSection: 1,
+            maxSectionCount: 1,
+            cards: [],
             loaded: false
         }
     },
 
     methods: {
+        normalizeTags(tags) {
+            if(tags.length === 0)
+                return null
+            const o = this.$store.state.config.tags
+            return tags.split(',').map(tag => {
+                if (Object.hasOwnProperty.call(o, tag))
+                    return o[tag]
+            }).join(' ').toLowerCase()
+        },
         onClickBack() {
             this.$router.push(`/${this.prevPage}`)
         },
@@ -112,7 +135,18 @@ export default {
             //         this.card[key] = ''
             //     }
             // }
-            
+        },
+        onCardClick(e) {
+            this.$router.push(`/feed`)
+            this.$router.push(`/preview/${e.currentTarget.id}`)
+            window.scrollTo(scrollX, 0);
+        },
+        async loadMorePosts() {
+            let res = await RequestsService.getTasks(this.currentSection, this.postsLimit);
+            this.currentSection++;
+            if(!res.success) return 0;
+            this.selectedSort = 'newAhead';
+            this.cards = [...this.cards, ...res.tasks];
         }
     }
 }
@@ -159,5 +193,7 @@ export default {
 .preview__card>*:nth-child(odd) {
     margin-bottom: 1vh;
 }
-
+.info-block {
+    overflow-wrap: break-word;
+}
 </style>

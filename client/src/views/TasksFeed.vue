@@ -13,8 +13,6 @@
                 <my-button class="action-btn">{{'Добавить задачу'}}</my-button>
             </router-link>
             <feed :tasks="sortedTasks" :currentSection="currentSection" :maxSectionCount="maxSectionCount" @onCardClick="onCardClick" @loadMorePosts="loadMorePosts"></feed>
-            <!-- <feed :tasks="sortedTasks" @onCardClick="onCardClick"></feed> -->
-            <!-- <div ref="observer"></div> -->
         </div>
     </div>
 </template>
@@ -30,7 +28,10 @@ import Feed from '../components/Feed.vue'
 export default {
     components: { SortCategories, MenuCategories, MyButton, Feed },
     async mounted() {
+        // получаем нужное количество карточек на 1 скролл
         let res = await RequestsService.getTasks(this.currentSection,this.postsLimit);
+
+        // получаем количество карточек в базе, чтобы предотвратить лишние запросы при скролле
         let countRes = await RequestsService.getRequest('getTasksCount');
 
         if(!countRes.success) {
@@ -43,21 +44,10 @@ export default {
         this.cards = res.tasks;
         //! this.currentSection++;
         this.$store.state.previousPage = 'feed'
-
-        // const options = {
-        //     rootMargin: '0px',
-        //     threshold: 1.0
-        // }
-        // const callback = (entries) => {
-        //     if (entries[0].isIntersecting && this.currentSection <= this.maxSectionCount)
-        //         this.loadMorePosts();
-        // };
-
-        // const observer = new IntersectionObserver(callback, options);
-        // observer.observe(this.$refs.observer);
     },
     computed: {
         sortedTasks(cur) {
+            // возвращает отсортированный массив в зависимости от выбранной опции сортировки
             switch (cur.selectedSort) {
                 case 'newAhead':
                     return [...this.cards].sort((a, b) => Number(new Date(b.creationDate)) > Number(new Date(a.creationDate))?1:-1)
@@ -67,7 +57,6 @@ export default {
 
                 default:
                     return [...this.cards].sort((a, b) => Number(new Date(b.creationDate)) > Number(new Date(a.creationDate))?1:-1)
-
             }
         }
     },

@@ -17,6 +17,9 @@
     font-size: 1.8rem;
     line-height: 130%;
     margin-bottom: 2vh;
+    overflow: hidden;
   }
-
+  .info-block {
+    overflow-wrap: break-word;
+  }
 </style>
