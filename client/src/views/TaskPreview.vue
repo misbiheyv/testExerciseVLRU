@@ -154,9 +154,14 @@ export default {
             //     }
             // }
         },
-        onCardClick(e) {
-            this.$router.push(`/preview/${e.currentTarget.id}`)
-            window.scrollTo(scrollX, 0);
+        async onCardClick(e) {
+            await this.$router.push(`/preview/${e.currentTarget.id}`)
+
+            // console.log('Updated route', this.$route)
+            location.reload();
+            // window.scrollTo(scrollX, 0);
+
+            // console.log(this.$router)
         },
         async loadMorePosts() {
             let res = await RequestsService.getTasks(this.currentSection, this.postsLimit);
