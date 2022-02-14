@@ -13,6 +13,34 @@ class RequestsService {
         }
     }
 
+    async updateTask(query) {
+        try {
+            const response = await fetch(`${API_URL}/update_task`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: query
+                })            
+            });
+            return await response.json();
+        } catch (error) {
+            return {success: false}
+        }
+
+    }
+
+    async deleteTask(id) {
+        try {
+            const response = await fetch(`${API_URL}/delete_task/${id}`, { method: 'DELETE' });
+            return {success:true, response}
+
+        } catch (error) {
+            return {success: false}
+        }
+    }
+
     async getTasks(start, range) {
         try {
             const res = await fetch(`${API_URL}/get_cards/${start}/${range}`);

@@ -4,6 +4,7 @@ import DBQueries from "./DB/DBQueries.js";
 const app = express()
 const router = express.Router()
 router.use(express.urlencoded({ extended: true }))
+router.use(express.json());
 
 const allowCrossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
@@ -15,26 +16,27 @@ const allowCrossDomain = function (req, res, next) {
 }
 app.use(allowCrossDomain)
 app.use(router)
+
 const PORT = process.env.PORT || 5001
 
-router.get('/save_card', (req, res) => {
+router.get('/save_card', async (req, res) => {
     const info = req.query
     const now = new Date()
     const normalize = (time) => {
         return time.toString().length===2?time:('0'+time)
     }
-    info.priority = /_+(?<weight>\d)$/.exec(info.priority)?.groups?.weight ?? '1'
+    // info.priority = /_+(?<weight>\d)$/.exec(info.priority)?.groups?.weight ?? '1'
 
     info.creationDate = `${now.getFullYear()}.${normalize(now.getMonth())}.${normalize(now.getDate())} ${normalize(now.getHours())}:${normalize(now.getMinutes())}`
     // DBQueries.addColsInTable('default','task',['title','priority','tags','description','creationDate'],)
-    DBQueries.addElementsInTable(
+    const id = await DBQueries.addElementsInTable(
         'default', 
         'task', 
         ['title','priority','tags','description','creationDate'],
         [info.title, info.priority, info.tags, info.description, info.creationDate]
     )
 
-    res.send({success: true, info})
+    res.send({success: true, id})
 })
 
 router.get('/get_cards/:section/:range/', (req, res) => {
@@ -75,6 +77,26 @@ router.get('/get_task', async (req, res) => {
     } catch (e) {
         res.send({ success: false })
         console.error(e)
+    }
+})
+
+router.put('/update_task', async (req, res) => {
+    try {
+        DBQueries.updateRowById('default', 'task', req.body.data)
+        res.send({success: true})
+    } catch(e) {
+        console.error(e)
+        res.send({success: false})
+    }
+})
+
+router.delete('/delete_task/:id', async (req, res) => {
+    try {
+        const deletedTask = await DBQueries.deleteRowById('default', 'task', req.params.id)
+        res.send({success: true, deletedTask})
+    } catch(e) {
+        console.error(e)
+        res.send({success: false})
     }
 })
 

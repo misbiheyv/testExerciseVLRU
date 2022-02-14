@@ -4,16 +4,14 @@
             <router-link to="/edit"><my-button class="action-btn">{{'Добавить задачу'}}</my-button></router-link>
             <sort-categories class="card-container" :options="sortOptions" v-model="selectedSort"></sort-categories>
             <menu-categories class="card-container"></menu-categories>
-            <card></card>
-            <card></card>
-            <card></card>
+            <feed></feed>
         </aside>
         <div class="preview__content">
             <div class="buttons__bar">
 
                 <my-button @click="onClickBack">{{ 'Назад' }}</my-button>
                 <router-link :to="`/edit/${this.card.id}`"><my-button class="action-btn">{{ 'Редактировать' }}</my-button></router-link> 
-                <my-button class="delete-btn">{{ 'Удалить' }}</my-button>
+                <my-button @click="onClickDelete" class="delete-btn">{{ 'Удалить' }}</my-button>
 
             </div>
             <div class="card-container preview__card" v-if="loaded">
@@ -42,11 +40,11 @@
 import SortCategories from "../components/SortCategories.vue"
 import MenuCategories from "../components/MenuCategories.vue";
 import MyButton from "../components/Button.vue";
-import Card from "../components/Card.vue"
 import RequestsService from '../services/requests.service'
+import Feed from '../components/Feed.vue'
 
 export default {
-    components: { SortCategories, MenuCategories, MyButton, Card },
+    components: { SortCategories, MenuCategories, MyButton, Feed },
     async mounted() {
         this.prevPage = this.$store.state.previousPage
 
@@ -62,6 +60,8 @@ export default {
         this.priorityCfg = this.$store.state.config.priority
         this.$store.state.previousPage = `preview/${this.card.id}`
         this.loaded = true
+
+        
     },
     computed: {
         sortedTasks(cur) {
@@ -102,11 +102,18 @@ export default {
         onClickBack() {
             this.$router.push(`/${this.prevPage}`)
         },
-        // onClickEdit() {
-        //     console.log(this.$router)
-        //     console.log(this.$route)
-        //     this.$router.push(`edit/${this.card.id}`)
-        // }
+        onClickDelete() {
+            if (this.card.id){
+                RequestsService.deleteTask(this.card.id)
+                this.$router.push({path: `/feed`})
+            } 
+            // for (const key in this.card) {
+            //     if (Object.hasOwnProperty.call(this.card, key)) {
+            //         this.card[key] = ''
+            //     }
+            // }
+            
+        }
     }
 }
 </script>
@@ -142,7 +149,7 @@ export default {
 .buttons__bar>*:last-child {
     margin-left: auto;
 }
-.buttons__bar>.action-btn {
+.buttons__bar .action-btn {
     margin: 0 2vw;
 }
 .preview__card>*:nth-child(even) {

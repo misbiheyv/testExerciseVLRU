@@ -6,6 +6,10 @@ const routes = [
     redirect: "/feed"
   },
   {
+    path: "/edit",
+    redirect: "/edit/0"
+  },
+  {
     path: "/feed",
     name: "Feed",
     component: () => import("../views/TasksFeed.vue"),

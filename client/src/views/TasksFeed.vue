@@ -12,30 +12,23 @@
             <router-link to="/edit">
                 <my-button class="action-btn">{{'Добавить задачу'}}</my-button>
             </router-link>
-            <ul class="feed"> <!--переместить onclick сюда-->
-                <li v-for="task in sortedTasks" :key="task.id" :id="task.id" @click="onCardClick">
-                    <card class="card">
-                        <template v-slot:title>{{ task.title.length===0 ? 'Без названия' : task.title }}</template>
-                        <template v-slot:date>{{ task.creationDate }}</template>
-                        <template v-slot:priority>{{ task.priority }}</template>
-                        <template v-slot:tags>{{ task.tags.length===0?'не установленно':task.tags }}</template>
-                    </card>
-                </li>
-            </ul>
-            <div ref="observer"></div>
+            <feed :tasks="sortedTasks" :currentSection="currentSection" :maxSectionCount="maxSectionCount" @onCardClick="onCardClick" @loadMorePosts="loadMorePosts"></feed>
+            <!-- <feed :tasks="sortedTasks" @onCardClick="onCardClick"></feed> -->
+            <!-- <div ref="observer"></div> -->
         </div>
     </div>
 </template>
 
 <script>
-import Card from "../components/Card.vue";
+
 import SortCategories from "../components/SortCategories.vue"
 import MenuCategories from "../components/MenuCategories.vue";
 import MyButton from "../components/Button.vue";
 import RequestsService from '../services/requests.service';
+import Feed from '../components/Feed.vue'
 
 export default {
-    components: { Card,  SortCategories, MenuCategories, MyButton },
+    components: { SortCategories, MenuCategories, MyButton, Feed },
     async mounted() {
         let res = await RequestsService.getTasks(this.currentSection,this.postsLimit);
         let countRes = await RequestsService.getRequest('getTasksCount');
@@ -48,20 +41,20 @@ export default {
 
         if(!res.success) return 0;
         this.cards = res.tasks;
-        this.currentSection++;
+        //! this.currentSection++;
         this.$store.state.previousPage = 'feed'
 
-        const options = {
-            rootMargin: '0px',
-            threshold: 1.0
-        }
-        const callback = (entries) => {
-            if (entries[0].isIntersecting && this.currentSection <= this.maxSectionCount)
-                this.loadMorePosts();
-        };
+        // const options = {
+        //     rootMargin: '0px',
+        //     threshold: 1.0
+        // }
+        // const callback = (entries) => {
+        //     if (entries[0].isIntersecting && this.currentSection <= this.maxSectionCount)
+        //         this.loadMorePosts();
+        // };
 
-        const observer = new IntersectionObserver(callback, options);
-        observer.observe(this.$refs.observer);
+        // const observer = new IntersectionObserver(callback, options);
+        // observer.observe(this.$refs.observer);
     },
     computed: {
         sortedTasks(cur) {
@@ -104,6 +97,7 @@ export default {
         }
     }
 }
+
 </script>
 
 <style scoped>
@@ -114,6 +108,7 @@ export default {
         flex-grow: 1;
         padding: 2vh 2vw;
     }
+
     .aside-menu {
         background-color: white;
         padding: 1vh 2vw;
@@ -121,22 +116,19 @@ export default {
         flex-direction: column;
         align-content: center;
         border: solid 1px rgba(0, 0, 0, 0.5);
-        width: 20%
+        width: 20%;
     }
-    li {
-        cursor: pointer;
-    }
-    .card {
-        margin: 15px 0
-    }
+
     .content {
         padding: 0 0 1vh 2vw;
-        width: 80%
+        width: 80%;
     }
+
     .sort-categories:first-child {
         margin-bottom: 2vh;
     }
+    
     .feed__aside {
-        min-width: 20%
+        min-width: 20%;
     }
 </style>

@@ -16,11 +16,11 @@
                 </select>
 
                 <div class="card-label-title">теги</div>
-                <ul class="scrollable-list" @click="onTagClick">
-                    <li>Разработка</li>
-                    <li>Дизайн</li>
-                    <li>Аналитика</li>
-                </ul>
+                <select class="tags-list" name="select-tags" id="select-tags" size="3" v-model="card.tags" multiple>
+                    <option value="develop">Разработка</option>
+                    <option value="design">Дизайн</option>
+                    <option value="analytics">Аналитика</option>
+                </select>
 
                 <div class="card-label-title">описание</div>
                 <textarea class="description_input" v-model="card.description">Описание задачи 4</textarea>
@@ -39,27 +39,22 @@ import RequestsService from '../services/requests.service'
 
 export default {
     components: { MyButton },
-    props: [
-        'titleP',
-        'descriptionP',
-        'dateOfCreationP',
-        'priorityP',
-        'tagsP',
-    ],
 
     async mounted() {
-        if (this.$route.params.id) {
+        console.log('id',this.$route.params.id)
+
+        if (this.$route.params.id == 0) {
+            this.newPost = true
+        } else {
             const r = await RequestsService.getTaskById(this.$route.params.id)
 
             this.card.id = r.id
             this.card.title = r.title
             this.card.priority = r.priority
-            this.card.tags = r.tags
+            this.card.tags = r.tags.split(',')
             this.card.creationDate = r.creationDate
             this.card.description = r.description
         }
-        const el = document.querySelector('.scrollable-list')
-        el.childNodes.forEach((el, index) => el.id = `li-${index}`)
 
         this.prevPage = this.$store.state.previousPage
         this.$store.state.previousPage = `edit/${this.card.id}`
@@ -72,43 +67,43 @@ export default {
             card: {
                 title: '',
                 description: '',
-                dateOfCreation: '',
-                priority: '',
+                creationDate: '',
+                priority: 'normal',
                 tags: []
             },
             prevPage: '',
-            tags: {},
+            newPost: false,
             loaded: false
         }
     },
 
     methods: {
         async onClickSave() {
-            for (const tag in this.tags) {
-                if (tag % 2 !== 0) 
-                    this.card.tags.push(tag)
+            if (this.newPost) {
+                console.log('create post')
+                this.createPost()
+            } else {
+                console.log('update post')
+                this.updatePost()
             }
+        },
 
+        async createPost() {
             let res = await RequestsService.getRequest('save_card', this.card)
             if (!res.success) {
                 return alert('Failure')
             }
-
             alert('Created')
+            this.$router.push({path: `/edit/${res.id}`})
         },
 
-        onTagClick(e) {
-            if(e.target.innerHTML in this.tags) {
-                this.tags[e.target.innerHTML] += 1
-            } else {
-                this.tags[e.target.innerHTML] = 1
+        async updatePost() {
+            let res = await RequestsService.updateTask(this.card)
+            if (!res.success) {
+                return alert('Failure')
             }
-            
-            if (this.tags[e.target.innerHTML] % 2 !== 0) {
-                e.target.classList.add('selected-tag')
-            } else {
-                e.target.classList.remove('selected-tag')
-            }
+
+            alert('Updated')
         },
 
         onClickBack() {
@@ -161,11 +156,11 @@ export default {
     margin-bottom: 1vh;
 }
 
-.scrollable-list {
+.tags-list {
     max-height: 200px;
     width: 20%;
-    overflow:hidden; 
-    overflow-y:scroll;
+    /* overflow:hidden; 
+    overflow-y:scroll; */
     border: solid 1px rgba(0, 0, 0, .3);
     /* padding: 5px 10px; */
     font-size: 18px;
@@ -173,13 +168,13 @@ export default {
     border-radius: 3px;
 }
 
-.scrollable-list>li {
+.tags-list>option {
     /* border-bottom: solid 1px black; */
     cursor: pointer;
     padding: 5px 10px;
 }
 
-.scrollable-list>li:last-child {
+.tags-list>option:last-child {
     border: none;
 }
 
