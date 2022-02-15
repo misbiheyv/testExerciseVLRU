@@ -77,8 +77,5 @@ li {
 .feed__card {
     margin: 15px 0
 }
-.selected-task>div:first-child {
-    background-color: green !important;
-}
 
 </style>

@@ -27,7 +27,7 @@
   }
   #main {
     min-height: 100vh;
-    background-color: #f8fafd;
+    background-color: #F0F0F2;
   }
   .card-container {
     background-color: white;
@@ -45,11 +45,11 @@
     color: rgba(0, 0, 0, 0.75);
   }
   .action-btn {
-    background-color: #0091da !important;
+    background-color: #5B48D9 !important;
     color: white;
   }
   .delete-btn {
-    background-color: #ee4e4a !important;
+    background-color: #F20519 !important;
     color: white;
   }
   .info-block {  

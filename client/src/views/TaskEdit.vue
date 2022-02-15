@@ -1,5 +1,7 @@
 <template>
     <div class="edit__wrapper">
+        <notification-card class="hidden" id="success-card"></notification-card>
+        <notification-card :bgColor="'#F20519'" class="hidden" id="failure-card"></notification-card>
         <header class="edit__header">
             <my-button class="" @click="onClickBack">назад</my-button>
         </header>
@@ -35,10 +37,11 @@
 
 <script>
 import MyButton from '../components/Button.vue'
+import NotificationCard from '../components/NotificationCard.vue'
 import RequestsService from '../services/requests.service'
 
 export default {
-    components: { MyButton },
+    components: { MyButton, NotificationCard },
 
     async mounted() {
         console.log('id',this.$route.params.id)
@@ -89,21 +92,35 @@ export default {
         },
 
         async createPost() {
+            const showCard = (id) => {
+                document.getElementById(id).classList.remove('hidden')
+                document.getElementById(id).firstElementChild.innerHTML = 'Задача сохранена!'
+                setTimeout(function(){
+                    document.getElementById(id).classList.add('hidden');
+                }, 2000);
+            }
+
             let res = await RequestsService.getRequest('save_card', this.card)
             if (!res.success) {
-                return alert('Failure')
+                return showCard('failure-card')
             }
-            alert('Created')
+            showCard('success-card')
             this.$router.push({path: `/edit/${res.id}`})
         },
 
         async updatePost() {
+            const showCard = (id) => {
+                document.getElementById(id).classList.remove('hidden')
+                document.getElementById(id).firstElementChild.innerHTML = 'Задача обновлена!'
+                setTimeout(function(){
+                    document.getElementById(id).classList.add('hidden');
+                }, 2000);
+            }
             let res = await RequestsService.updateTask(this.card)
             if (!res.success) {
-                return alert('Failure')
+                return showCard('failure-card')
             }
-
-            alert('Updated')
+            showCard('success-card')
         },
 
         onClickBack() {
@@ -159,17 +176,13 @@ export default {
 .tags-list {
     max-height: 200px;
     width: 20%;
-    /* overflow:hidden; 
-    overflow-y:scroll; */
     border: solid 1px rgba(0, 0, 0, .3);
-    /* padding: 5px 10px; */
     font-size: 18px;
     line-height: 170%;
     border-radius: 3px;
 }
 
 .tags-list>option {
-    /* border-bottom: solid 1px black; */
     cursor: pointer;
     padding: 5px 10px;
 }

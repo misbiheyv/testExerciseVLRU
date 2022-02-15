@@ -73,8 +73,8 @@ ul li {
     background-size: 50% 50%;
 }
 .radio-area:checked+.radio-label::before {
-    border: 2px solid #0091da;
+    border: 2px solid #5B48D9;
     /* background-color: #0b76ef; */
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='4' fill='%230091da'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='4' fill='%235B48D9'/%3e%3c/svg%3e");
 }
 </style>

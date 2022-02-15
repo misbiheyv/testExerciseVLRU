@@ -147,19 +147,11 @@ export default {
             if (this.card.id){
                 RequestsService.deleteTask(this.card.id)
                 this.$router.push({path: `/feed`})
-            } 
-            // for (const key in this.card) {
-            //     if (Object.hasOwnProperty.call(this.card, key)) {
-            //         this.card[key] = ''
-            //     }
-            // }
+            }
         },
         async onCardClick(e) {
             await this.$router.push(`/preview/${e.currentTarget.id}`)
             location.reload();
-
-            // window.scrollTo(scrollX, 0);
-            // console.log(this.$router)
         },
         async loadMorePosts() {
             let res = await RequestsService.getTasks(this.currentSection, this.postsLimit);

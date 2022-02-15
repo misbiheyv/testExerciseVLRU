@@ -30,7 +30,7 @@ const routes = [
     path: "/edit/:id",
     name: "Edit",
     component: () => import("../views/TaskEdit.vue"),
-  },
+  }
 ];
 
 const router = createRouter({
