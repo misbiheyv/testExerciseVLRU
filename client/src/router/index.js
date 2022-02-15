@@ -3,11 +3,11 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    redirect: "/feed"
+    redirect: "/feed",
   },
   {
     path: "/edit",
-    redirect: "/edit/0"
+    redirect: "/edit/0",
   },
   {
     path: "/feed",
@@ -18,19 +18,19 @@ const routes = [
     path: "/preview/:id",
     name: "Preview",
     component: () => import("../views/TaskPreview.vue"),
-    props: route => ({ ...route.params })
+    props: (route) => ({ ...route.params }),
   },
   {
     path: "/edit",
     name: "Edit",
     component: () => import("../views/TaskEdit.vue"),
-    props: route => ({ ...route.params })
+    props: (route) => ({ ...route.params }),
   },
   {
     path: "/edit/:id",
     name: "Edit",
     component: () => import("../views/TaskEdit.vue"),
-  }
+  },
 ];
 
 const router = createRouter({
