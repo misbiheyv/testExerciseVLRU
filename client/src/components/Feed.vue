@@ -37,7 +37,6 @@ export default {
             rootMargin: '0px',
             threshold: 1.0
         }
-        console.log(this.$store.state.tags)
         const callback = (entries) => {
             if (entries[0].isIntersecting && this.currentSection <= this.maxSectionCount){
                 this.$emit('loadMorePosts')

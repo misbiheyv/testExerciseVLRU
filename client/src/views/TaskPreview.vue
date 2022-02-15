@@ -156,11 +156,9 @@ export default {
         },
         async onCardClick(e) {
             await this.$router.push(`/preview/${e.currentTarget.id}`)
-
-            // console.log('Updated route', this.$route)
             location.reload();
-            // window.scrollTo(scrollX, 0);
 
+            // window.scrollTo(scrollX, 0);
             // console.log(this.$router)
         },
         async loadMorePosts() {
